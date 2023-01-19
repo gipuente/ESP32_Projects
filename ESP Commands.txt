@@ -1,0 +1,16 @@
+/****************************************************/
+/* Comandos ESP32 para consola power SHELL ESP-IDF  */
+/****************************************************/
+// !< Manejo de path de trabajo
+cd "C:\Directorio_del_proyecto\..." -> Cambia la carpeta de trabajo
+idf.py fullclean -> Cambia el build path al seleccionado
+
+// !< Compilacion y carga de proyecto
+idf.py menuconfig -> Abre la consola de compilacion
+idf.py build -> Compila el proyecto
+idf.py -p COM5 flash -> Carga el programa al hardware
+
+// !< Interaccion con HID
+idf.py monitor -> Abre el monitor del ESP32
+"CTRL + ]" -> Cierra el monitor
+ 

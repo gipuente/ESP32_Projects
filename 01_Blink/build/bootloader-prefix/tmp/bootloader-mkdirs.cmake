@@ -5,18 +5,18 @@ cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
   "C:/Espressif/frameworks/esp-idf-v5.0/components/bootloader/subproject"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/tmp"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/src"
-  "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/tmp"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/src"
+  "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
 if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
+  file(MAKE_DIRECTORY "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
 endif()

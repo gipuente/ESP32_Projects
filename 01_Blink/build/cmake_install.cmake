@@ -1,4 +1,4 @@
-# Install script for directory: C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink
+# Install script for directory: C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/esp-idf/cmake_install.cmake")
+  include("C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Espressif/frameworks/esp-idf-v5.0/examples/get-started/blink/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/equipo3/Desktop/ESP32_Projects/01_Blink/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
