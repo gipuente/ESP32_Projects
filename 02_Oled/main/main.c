@@ -194,10 +194,13 @@ void app_main(void)
     SSD1306_t dev;
 
 #if CONFIG_I2C_INTERFACE
+    // !< Mensajes x monitor
     ESP_LOGI(TAG, "INTERFACE is i2c");
     ESP_LOGI(TAG, "CONFIG_SDA_GPIO=%d",CONFIG_SDA_GPIO);
     ESP_LOGI(TAG, "CONFIG_SCL_GPIO=%d",CONFIG_SCL_GPIO);
     ESP_LOGI(TAG, "CONFIG_RESET_GPIO=%d",CONFIG_RESET_GPIO);
+    // !< Inicializacion de comunicacion I2C: 
+    // !< Argumentos: Estructura, GPIO SDA, GPIO SCL, GPIO RESET
     i2c_master_init(&dev, CONFIG_SDA_GPIO, CONFIG_SCL_GPIO, CONFIG_RESET_GPIO);
 #endif // CONFIG_I2C_INTERFACE
 
@@ -208,30 +211,37 @@ void app_main(void)
     ESP_LOGI(TAG, "CONFIG_CS_GPIO=%d",CONFIG_CS_GPIO);
     ESP_LOGI(TAG, "CONFIG_DC_GPIO=%d",CONFIG_DC_GPIO);
     ESP_LOGI(TAG, "CONFIG_RESET_GPIO=%d",CONFIG_RESET_GPIO);
+    // !< Inicializacion de comunicacion I2C: 
+    // !< Argumentos: Estructura, GPIO MOSI, GPIO SCLK, GPIO CS, GPIO DC, GPIO RESET
     spi_master_init(&dev, CONFIG_MOSI_GPIO, CONFIG_SCLK_GPIO, CONFIG_CS_GPIO, CONFIG_DC_GPIO, CONFIG_RESET_GPIO);
 #endif // CONFIG_SPI_INTERFACE
 
 #if CONFIG_FLIP
+    // !< Girar pantalla OLED
     dev._flip = true;
     ESP_LOGW(TAG, "Flip upside down");
 #endif
 
 #if CONFIG_SSD1306_128x64
     ESP_LOGI(TAG, "Panel is 128x64");
+    // !< Inicializacion pantalla ssd1306
     ssd1306_init(&dev, 128, 64);
 #endif // CONFIG_SSD1306_128x64
 #if CONFIG_SSD1306_128x32
     ESP_LOGE(TAG, "Panel is 128x32. This demo cannot be run.");
     while(1) { vTaskDelay(1); }
 #endif // CONFIG_SSD1306_128x32
+
+    // !< Seteamos contraste 0xff -> Contraste maximo
     ssd1306_contrast(&dev, 0xff);
 
-    // Allocate memory
+    // Generamos un buffer liberando espacio en memora: 128 x (8 Paginas de 8 bits) = 8192 bits
     uint8_t *buffer = (uint8_t *)malloc(8*128); // 8 page 128 pixel
     if (buffer == NULL) {
         ESP_LOGE(TAG, "malloc failed");
         while(1) { vTaskDelay(1); }
     }
+    // Generamos un buffer de segmento? liberando espacio en memora: 32 x (8 Paginas de 8 bits) = 8192 bits
     uint8_t *segmentImage = (uint8_t *)malloc(IMAGES*8*32); // 10 image 8 page 32 pixel
     if (segmentImage == NULL) {
         ESP_LOGE(TAG, "malloc failed");
