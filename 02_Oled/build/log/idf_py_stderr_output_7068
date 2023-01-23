@@ -1,0 +1,8 @@
+CMake Error at C:/Espressif/frameworks/esp-idf-v5.0/tools/cmake/project.cmake:243 (message):
+  Directory specified in EXTRA_COMPONENT_DIRS doesn't exist:
+  C:/Users/equipo3/Desktop/ESP32_Projects/components/ssd1306
+Call Stack (most recent call first):
+  C:/Espressif/frameworks/esp-idf-v5.0/tools/cmake/project.cmake:327 (__project_init)
+  CMakeLists.txt:8 (project)
+
+
