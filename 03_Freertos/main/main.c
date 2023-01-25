@@ -4,9 +4,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_log.h"
-
 #include "ssd1306.h"
-
+//#include "led_strip.h"
 /*
  You have to set this config value with menuconfig
  CONFIG_INTERFACE
@@ -25,39 +24,7 @@
 #define IMAGES 10
 #define BLINK_GPIO 2
 
-static uint8_t s_led_state = 0;
-static led_strip_handle_t led_strip;
-
-static void blink_led(void)
-{
-    /* If the addressable LED is enabled */
-    if (s_led_state) {
-        /* Set the LED pixel using RGB from 0 (0%) to 255 (100%) for each color */
-        led_strip_set_pixel(led_strip, 0, 16, 16, 16);
-        /* Refresh the strip to send data */
-        led_strip_refresh(led_strip);
-    } else {
-        /* Set all LED off to clear all pixels */
-        led_strip_clear(led_strip);
-    }
-}
-
-static void configure_led(void)
-{
-    ESP_LOGI(TAG, "Example configured to blink addressable LED!");
-    /* LED strip initialization with the GPIO and pixels number*/
-    led_strip_config_t strip_config = {
-        .strip_gpio_num = BLINK_GPIO,
-        .max_leds = 1, // at least one LED on board
-    };
-    led_strip_rmt_config_t rmt_config = {
-        .resolution_hz = 10 * 1000 * 1000, // 10MHz
-    };
-    ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));
-    /* Set all LED off to clear all pixels */
-    led_strip_clear(led_strip);
-}
-
+SSD1306_t dev;
 
 uint8_t segmentDisplay[IMAGES][192] = {
 {
@@ -223,22 +190,52 @@ uint8_t segmentDisplay[IMAGES][192] = {
 };
 
 // !< Tarea 1: Hace 
-TaskHandle_t Task1_Led = NULL;
+TaskHandle_t Task1_Oled = NULL;
 TaskHandle_t Tarea2_Timer = NULL;
 
 // !< Ejecucion Task1: Prende un led
-void Task1_Led_Execution(void *arg)
+void Task1_Oled_Execution(void *arg)
 {
+    int STATE = 0;
+    int sec = 59;
+    int min = 59;
+    int hour = 1;
+    char string[10];
+    
     while (1)
     {
-        blink_led();
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        
+        if (sec<=0){
+            sec = 59;
+            if (min <= 0){
+                min = 59;
+                if (hour <=0){
+                    hour = 59;
+                }
+                else hour--;
+            }
+            else min--;
+        }
+        else sec--;
+        string[0] = ' ';
+        string[1] = hour/10 +'0';
+        string[2] = hour%10 + '0'; 
+        string[3] = ':';
+        string[4] = min/10 + '0';
+        string[5] = min%10 + '0';
+        string[6] = ':';
+        string[7] = sec/10 + '0';
+        string[8] = sec%10 + '0';
+
+        STATE = ~STATE;
+        ssd1306_display_text(&dev, 0,string, 10, STATE);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
 void app_main(void)
 {
-    SSD1306_t dev;
+    
 
 #if CONFIG_I2C_INTERFACE
     // !< Mensajes x monitor
@@ -282,9 +279,6 @@ void app_main(void)
     // !< Seteamos contraste 0xff -> Contraste maximo
     ssd1306_contrast(&dev, 0xff);
 
-    // !< Configuramos el led
-    configure_led();
-
     // Generamos un buffer liberando espacio en memora: 128 x (8 Paginas de 8 bits) = 8192 bits
     uint8_t *buffer = (uint8_t *)malloc(8*128); // 8 page 128 pixel
     if (buffer == NULL) {
@@ -298,37 +292,6 @@ void app_main(void)
         while(1) { vTaskDelay(1); }
     }
 
-    // Convert from segmentDisplay to segmentImage
-    for (int imageIndex=0;imageIndex<IMAGES;imageIndex++) {
-        ssd1306_clear_screen(&dev, false);
-        ssd1306_bitmaps(&dev, 0, 8, segmentDisplay[imageIndex], 32, 48, false);
-        vTaskDelay(200 / portTICK_PERIOD_MS);
-
-        // Get from internal buffer to local buffer
-        // buffer is [8][128] 8 page 128 pixel
-        ssd1306_get_buffer(&dev, buffer);
-
-        // Save from buffer to segmentImage
-        // segmentImage is [10][8][32] 10 image 8 page 32 pixel
-        int segmentImageIndex = imageIndex * 256;
-        for (int page=0;page<8;page++) {
-            //ESP_LOGI(TAG, "segmentImageIndex+page*32=%d", segmentImageIndex+page*32);
-            memcpy(&segmentImage[segmentImageIndex+page*32], &buffer[page*128], 32);
-            //ESP_LOGI(TAG, "page=%d", page);
-            //ESP_LOG_BUFFER_HEXDUMP(TAG, &buffer[page*128], 32, ESP_LOG_INFO);
-        }
-
-#if 0
-        ssd1306_clear_screen(&dev, false);
-        for (int page=0;page<8;page++) {
-            ssd1306_display_image(&dev, page, 0, &segmentImage[segmentImageIndex+page*32], 32);
-            //ESP_LOGI(TAG, "page=%d", page);
-            //ESP_LOG_BUFFER_HEXDUMP(TAG, &segmentImage[segmentImageIndex+page*32], 32, ESP_LOG_INFO);
-        }
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-#endif
-    }
-
     // I don't use this anymore
     free(buffer);
 
@@ -337,62 +300,14 @@ void app_main(void)
     int digit3 = 0;
     int digit4 = 0;
     ssd1306_clear_screen(&dev, false);
-    for (int page=0;page<8;page++) {
-        ssd1306_display_image(&dev, page, 0, &segmentImage[page*32], 32);
-        ssd1306_display_image(&dev, page, 32, &segmentImage[page*32], 32);
-        ssd1306_display_image(&dev, page, 64, &segmentImage[page*32], 32);
-        ssd1306_display_image(&dev, page, 96, &segmentImage[page*32], 32);
-        vTaskDelay(2);
-    }
 
     // !< Creamos la tarea
-    xTaskCreate(Task1_Led_Execution, "Task1_Led_Execution", 4096, NULL, 10, &Task1_Led);
+    xTaskCreate(Task1_Oled_Execution, "Task1_Oled_Execution", 4096, NULL, 10, &Task1_Oled);
     
     while(1) {
-        digit4++;
-        if (digit4 == 10) {
-            digit4 = 0;
-            int segmentImageIndex4 = digit4 * 256;
-            for (int page=0;page<8;page++) {
-                ssd1306_display_image(&dev, page, 96, &segmentImage[segmentImageIndex4+page*32], 32);
-            }
-            digit3++;
-            if (digit3 == 10) {
-                digit3 = 0;
-                digit2++;
-                if (digit2 == 10) {
-                    digit2 = 0;
-                    digit1++;
-                    if (digit1 == 10) {
-                        digit1 = 0;
-                        digit2 = 0;
-                        digit3 = 0;
-                        digit4 = 0;
-                    }
-                    // Update digit1
-                    int segmentImageIndex1 = digit1 * 256;
-                    for (int page=0;page<8;page++) {
-                        ssd1306_display_image(&dev, page, 00, &segmentImage[segmentImageIndex1+page*32], 32);
-                    }
-                }
-                // Update digit2
-                int segmentImageIndex2 = digit2 * 256;
-                for (int page=0;page<8;page++) {
-                    ssd1306_display_image(&dev, page, 32, &segmentImage[segmentImageIndex2+page*32], 32);
-                }
-            }
-            // Update digit3
-            int segmentImageIndex3 = digit3 * 256;
-            for (int page=0;page<8;page++) {
-                ssd1306_display_image(&dev, page, 64, &segmentImage[segmentImageIndex3+page*32], 32);
-            }
-        } else {    
-            // Update digit4
-            int segmentImageIndex4 = digit4 * 256;
-            for (int page=0;page<8;page++) {
-                ssd1306_display_image(&dev, page, 96, &segmentImage[segmentImageIndex4+page*32], 32);
-            }
-        }
+        
+
+        
         vTaskDelay(8);
     } // end while
 }
