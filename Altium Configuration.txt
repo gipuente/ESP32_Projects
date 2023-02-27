@@ -1,0 +1,43 @@
+Como modificar librerias de una empresa para pasar a otra.
+
+1- Guardar todo en el lugar o unidad de RED que se va a usar.
+2- Cambiar nombre de el archivo .DbLib y del .xls (que deberia tener el mismo nombre).
+3- Modificar los nombres de .PcbLib y .SchLib
+4- Abrir el XLS, y cambiar globalmente (hay que hacerlo en cada hoja de familia de componentes):
+	- COD interno
+	- Descripcion (y todos los campos propietarios de la empresa)
+	- Direccion de la libreria de SCH y PCB, a la nueva donde esta (punto 1).
+	- Direccion de la libreria de PCB, a la nueva donde esta (punto 1).
+
+5- Abrir el .DbLib con el Altium, 
+	- Modificar el vinculo al .xls
+	- Conectar el field Settings por CADA tabla, con "single key lookup" se configura que parametro muestra a la hora de ponerlo.
+		Por ejemplo, "Value" o el codigo interno de la empresa (que seria el caso ideal, para una UNICA vinculacion).
+	- tambien, por tabla, se puede configurar que parametros del componentes arrancan por defecto visibles.
+
+
+// CONFIGURACION DEL ALTIUM, 
+- en el schematic, 
+	- tools\schematic preferences\data management\Templates
+		poner la direccion de donde esta todo. [Z:\Libraries_RT\Altium]
+	- tools\schematic preferences\General\ configurar el default blank sheet template or size
+	- Configurar de donde sacar los componentes
+		Design\Add\remove library->Installed y tocar el boton de Install (from file) buscar la DBLib
+	
+
+LISTOOO!
+a la hora de poner un PART (place\part\choose), buscar entre las librerias y deberian aparecer las tablas de la DBlib 
+Los componentes en el SCH viene con los campos definidos en xls y DbLib.
+
+Conviene ponerlos desde el panel izquierdo, en libraries y explorarlas.... se peude configurar que columnas ver.
+https://www.altium.com/documentation/altium-designer/working-with-database-libraries-ad?version=18.1
+
+
+https://www.altium.com/documentation/altium-designer/working-with-database-libraries-ad?version=17.1
+
+SOLUCION A LO DE NO VER LA UNIDAD DE RED
+NO hay que ejecutar el Altium como ADMINISTRADOR
+https://knowledge.autodesk.com/support/autocad/troubleshooting/caas/sfdcarticles/sfdcarticles/Can-t-find-mapped-network-drives.html
+
+
+330uF/6.3V cap RB.138/.315

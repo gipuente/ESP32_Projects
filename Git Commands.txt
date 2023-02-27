@@ -1,0 +1,33 @@
+/*********************************************/
+/*******	--GIT/Comandos--       *******/
+/*********************************************/
+
+git clone <Direccion del repositorio>
+git flow init 				-> Iniciar el sistema de gitflow (Main/develop/feature/bugfix/relase/hotfix/support/tag)
+git flow init -f 			-> Resetear la inicializacion del git flow
+
+/* Manejo de branches */
+git branch <Nombre de la rama>		-> Crear branch con nombre X
+git checkout <Nombre de la rama> 	-> Saltar a un branch X
+
+/* Subir repo local al repo virtual */
+git status				-> Estado del commit y pull/push
+git add . 				-> Agrega el contenido de toda la carpeta al repo
+git add X				-> Agrega la carpeta/archivos al repositorio
+git commit -m "Mensaje"			-> Genero un commit con el mensaje "X"
+git pull origin <branch>		-> Realiza un pull del repositorio virtual al local
+git push origin <branch>		-> Realiza un push del repositorio local al virtual
+git log					-> Me hace un log de todos los commits realizados
+
+/* GIT REMOTE */
+git remote -v				-> Conexiones que tiene mi repo local con repos en la nube
+git remote add <nombre> <enlace>	-> Creo un enlace con el repositorio
+git remote add upstream <enlace>	-> Creo un enlace con el repositorio de la empresa
+
+/* SMART COMMIT */
+git commit -m "TAG-JIRA #transicion #comment Comentario" -> La tarea del Jira salta a la transicion necesaria
+
+ 
+
+
+
