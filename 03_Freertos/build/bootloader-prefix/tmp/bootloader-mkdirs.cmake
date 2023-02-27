@@ -4,19 +4,16 @@
 cmake_minimum_required(VERSION 3.5)
 
 file(MAKE_DIRECTORY
-  "C:/Espressif/frameworks/esp-idf-v5.0/components/bootloader/subproject"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/tmp"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src"
-  "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Espressif/frameworks/esp-idf-v4.4.2/components/bootloader/subproject"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/tmp"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src"
+  "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp"
 )
 
 set(configSubDirs )
 foreach(subDir IN LISTS configSubDirs)
-    file(MAKE_DIRECTORY "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
+    file(MAKE_DIRECTORY "C:/Users/prome/OneDrive/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp/${subDir}")
 endforeach()
-if(cfgdir)
-  file(MAKE_DIRECTORY "C:/Users/equipo3/Desktop/ESP32_Projects/03_Freertos/build/bootloader-prefix/src/bootloader-stamp${cfgdir}") # cfgdir has leading slash
-endif()
